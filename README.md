@@ -40,3 +40,8 @@ heroku logs --tail
 ```
 curl $(heroku info | grep 'Web URL' | awk '{ print $3 }')/'?user=foo&password=bar'
 ```
+
+# 参考
+https://docs.aiohttp.org/en/stable/index.html
+https://aiopg.readthedocs.io/en/stable/index.html
+https://www.sqlalchemy.org/library.html
