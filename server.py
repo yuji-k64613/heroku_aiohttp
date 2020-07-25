@@ -42,6 +42,9 @@ async def main(request):
     cookies = request.cookies;
     auth = False
 
+    if "logout" in query:
+        return None, None, None, None 
+
     # URL
     host = "python.org"
     path = request.path
@@ -89,13 +92,20 @@ async def main(request):
 async def handle(request):
     logging.info(f"START {str(request.url)}")
     text, binary, auth, response = await main(request)
-    if text:
+
+    if not response:
+        text = "logout"
+        resp = web.Response(text=text)
+        resp.del_cookie("auth")
+    elif text:
         resp = web.Response(text=text)
     else:
         resp = web.StreamResponse()
         await resp.prepare(request)
         await resp.write(binary)
-    resp.content_type = response.headers["Content-Type"]
+
+    if response:
+        resp.content_type = response.headers["Content-Type"]
     if auth:
         resp.set_cookie("auth", "ok")
 

@@ -31,7 +31,7 @@ heroku config:get DATABASE_URL
 heroku info | grep 'Web URL' | awk '{ print $3 }'
 ```
 
-# Log
+# ログ
 ```
 heroku logs --tail
 ```
