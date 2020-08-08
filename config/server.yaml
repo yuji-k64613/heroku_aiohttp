@@ -1,0 +1,3 @@
+server:
+  host: python.org
+  port: 8080

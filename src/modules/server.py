@@ -6,26 +6,18 @@ import asyncio
 import aiohttp
 from aiohttp import web
 from aiopg.sa import create_engine
-import sqlalchemy as sa
-from sqlalchemy import Column, Integer, String, TIMESTAMP
 
-app = web.Application()
-logging.basicConfig(level=logging.INFO)
+import modules.settings as setting
+import modules.db as db
+import modules.utils as utils
 
-# テーブル定義
-metadata = sa.MetaData()
-tbl = sa.Table(
-    'users', metadata,
-    Column("id", Integer, primary_key=True),
-    Column("name", String(50), unique=True),
-    Column("password", String(120), unique=True),
-)
+config = setting.get_config()
 
 async def fetch(session, url):
     async with session.get(url) as response:
         ct = response.headers["Content-Type"]
         logging.info(f"Content-Type={ct}")
-        if re.match("^text/", ct):
+        if utils.is_text(ct):
             text = await response.text()
             binary = None
         else:
@@ -46,7 +38,7 @@ async def main(request):
         return None, None, None, None 
 
     # URL
-    host = "python.org"
+    host = config.get("server").get("host")
     path = request.path
     url = f"http://{host}{path}"
     
@@ -65,8 +57,7 @@ async def main(request):
         # DBアクセス(認証)
         engine = app['db']
         async with engine.acquire() as conn:
-            query = sa.select([ tbl.c.id, tbl.c.name, tbl.c.password ]).select_from(tbl).where(tbl.c.name == param_user)
-            user = await (await conn.execute(query)).first()
+            user = await db.get_user(param_user, password)
         if not user:
             logging.error("ERROR2!!")
             raise web.HTTPUnauthorized()
@@ -123,11 +114,3 @@ async def init_pg(app):
 async def close_pg(app):
     app['db'].close()
     await app['db'].wait_closed()
-
-setup_routes(app)
-app.on_startup.append(init_pg)
-app.on_cleanup.append(close_pg)
-
-if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 8080))
-    web.run_app(app, host="0.0.0.0", port=port)
