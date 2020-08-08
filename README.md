@@ -38,7 +38,7 @@ heroku logs --tail
 
 # 動作確認
 ```
-curl $(heroku info | grep 'Web URL' | awk '{ print $3 }')/'?user=foo&password=bar'
+curl $(heroku info | grep 'Web URL' | awk '{ print $3 }')'?user=foo&password=bar'
 ```
 
 # 参考
