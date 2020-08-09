@@ -14,6 +14,7 @@ import modules.utils as utils
 config = setting.get_config()
 engine = None
 
+
 async def fetch(session, url):
     async with session.get(url) as response:
         ct = response.headers["Content-Type"]
@@ -27,22 +28,23 @@ async def fetch(session, url):
         await response.release()
         return text, binary, response
 
+
 async def main(request):
     # HTTPパラメータ
     query = request.query
 
     # cookie
-    cookies = request.cookies;
+    cookies = request.cookies
     auth = False
 
     if "logout" in query:
-        return None, None, None, None 
+        return None, None, None, None
 
     # URL
     host = config.get("server").get("host")
     path = request.path
     url = f"http://{host}{path}"
-    
+
     if "auth" in cookies:
         logging.info("Authenticated")
     else:
@@ -54,7 +56,7 @@ async def main(request):
         else:
             param_user = request.query["user"]
             param_password = request.query["password"]
-    
+
         # DBアクセス(認証)
         async with engine.acquire() as conn:
             user = await db.get_user(conn, param_user, param_password)
@@ -70,7 +72,7 @@ async def main(request):
 
     # リクエストヘッダ
     headers = request.headers
-    headers = { k: headers[k] for k in headers.keys() }
+    headers = {k: headers[k] for k in headers.keys()}
     del headers["Host"]
 
     # HTTPリクエスト
@@ -79,6 +81,7 @@ async def main(request):
     await session.close()
 
     return text, binary, auth, response
+
 
 async def handle(request):
     logging.info(f"START {str(request.url)}")
@@ -103,16 +106,19 @@ async def handle(request):
     logging.info(f"END {str(request.url)}")
     return resp
 
+
 def setup_routes(app):
-    app.router.add_get(r'/{path:.*}', handle)
+    app.router.add_get(r"/{path:.*}", handle)
+
 
 async def init_pg(app):
     global environ
 
-    dsn = os.environ['DATABASE_URL']
+    dsn = os.environ["DATABASE_URL"]
     engine = await create_engine(dsn)
-    app['db'] = engine
+    app["db"] = engine
+
 
 async def close_pg(app):
-    app['db'].close()
-    await app['db'].wait_closed()
+    app["db"].close()
+    await app["db"].wait_closed()
