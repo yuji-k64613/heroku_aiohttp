@@ -10,7 +10,7 @@ tbl = sa.Table(
     Column("password", String(120), unique=True),
 )
 
-async def get_user(user, password):
-    query = sa.select([ tbl.c.id, tbl.c.name, tbl.c.password ]).select_from(tbl).where(tbl.c.name == param_user)
+async def get_user(conn, user, password):
+    query = sa.select([ tbl.c.id, tbl.c.name, tbl.c.password ]).select_from(tbl).where(tbl.c.name == user)
     user = await (await conn.execute(query)).first()
     return user

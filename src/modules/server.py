@@ -12,6 +12,7 @@ import modules.db as db
 import modules.utils as utils
 
 config = setting.get_config()
+engine = None
 
 async def fetch(session, url):
     async with session.get(url) as response:
@@ -55,9 +56,8 @@ async def main(request):
             param_password = request.query["password"]
     
         # DBアクセス(認証)
-        engine = app['db']
         async with engine.acquire() as conn:
-            user = await db.get_user(param_user, password)
+            user = await db.get_user(conn, param_user, param_password)
         if not user:
             logging.error("ERROR2!!")
             raise web.HTTPUnauthorized()
@@ -107,6 +107,8 @@ def setup_routes(app):
     app.router.add_get(r'/{path:.*}', handle)
 
 async def init_pg(app):
+    global environ
+
     dsn = os.environ['DATABASE_URL']
     engine = await create_engine(dsn)
     app['db'] = engine
