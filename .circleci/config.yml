@@ -31,6 +31,15 @@ jobs:
           command: |
             . venv/bin/activate
             pytest --cov=src
+    steps:
+      - slack/notify:
+          channel: my-circleci
+          color: '#42e2f4'
+          mentions: 'yuji-k64613'
+          message: This is a custom message notification
+          webhook: webhook
+orbs:
+  slack: circleci/slack@3.4.2
 
 workflows:
   main:
