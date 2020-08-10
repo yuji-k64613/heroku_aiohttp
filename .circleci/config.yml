@@ -36,7 +36,7 @@ jobs:
           channel: my-circleci
           color: '#42e2f4'
           mentions: 'yuji-k64613'
-          message: This is a custom message notification
+          message: CircleCI1からの通知
           webhook: https://hooks.slack.com/services/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
 
 workflows:
