@@ -11,10 +11,26 @@ jobs:
       - python/load-cache
       - python/install-deps
       - python/save-cache
+      #- run:
+      #    command: ./manage.py test
+      #    name: Test
       - run:
-          #command: ./manage.py test
-          command: pytet
-          name: Test
+          name: install dependencies
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install pytest
+            pip install pytest-cov
+      - run:
+          name: run test
+          command: |
+            . venv/bin/activate
+            pytest --junitxml=test-reports/junit.xml
+      - run:
+          name: run test-cov
+          command: |
+            . venv/bin/activate
+            pytest --cov=src
 
 workflows:
   main:
