@@ -32,7 +32,6 @@ jobs:
           command: |
             . venv/bin/activate
             pytest --cov=src
-    steps:
       - slack/notify:
           channel: my-circleci
           color: '#42e2f4'
