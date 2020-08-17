@@ -87,11 +87,11 @@ async def handle(request):
     logging.info(f"START {str(request.url)}")
     text, binary, auth, response = await main(request)
 
-    if not response:
+    if response is None:
         text = "logout"
         resp = web.Response(text=text)
         resp.del_cookie("auth")
-    elif text:
+    elif text is not None:
         resp = web.Response(text=text)
     else:
         resp = web.StreamResponse()
