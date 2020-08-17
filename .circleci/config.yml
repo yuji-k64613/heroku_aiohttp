@@ -33,13 +33,14 @@ jobs:
             . venv/bin/activate
             pytest --cov=src
       - slack/notify:
-          channel: my-circleci
-          color: '#42e2f4'
-          mentions: 'yuji-k64613'
-          message: CircleCI1からの通知
-          webhook: https://hooks.slack.com/services/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
+	      color: "#42e2f4"
+	      mentions: "yemiwebby,"
+	      message: A custom message to notify the channel about the latest build
+      - slack/status:
+	      fail_only: true
+	      mentions: "yemiwebby"
 
 workflows:
-  main:
+  build-and-notify:
     jobs:
-      - build-and-test
+      - build
