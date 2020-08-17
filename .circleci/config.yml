@@ -12,9 +12,6 @@ jobs:
       - python/load-cache
       - python/install-deps
       - python/save-cache
-      #- run:
-      #    command: ./manage.py test
-      #    name: Test
       - run:
           name: install dependencies
           command: |
@@ -34,11 +31,11 @@ jobs:
             pytest --cov=src
       - slack/notify:
           color: "#42e2f4"
-          mentions: "yemiwebby,"
+          mentions: "circleci,"
           message: A custom message to notify the channel about the latest build
       - slack/status:
           fail_only: true
-          mentions: "yemiwebby"
+          mentions: "circleci"
 
 workflows:
   heroku_deploy:

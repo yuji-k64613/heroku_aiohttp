@@ -29,33 +29,39 @@ import psycopg2
 from aiopg import sa
 import gc
 
-@pytest.fixture
-def loop(request):
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(None)
+#@pytest.fixture
+#def loop(request):
+#    loop = asyncio.new_event_loop()
+#    asyncio.set_event_loop(None)
+#
+#    yield loop
+#
+#    if not loop._closed:
+#        loop.call_soon(loop.stop)
+#        loop.run_forever()
+#        loop.close()
+#    gc.collect()
+#    asyncio.set_event_loop(None)
 
+#@pytest.fixture
+#def get_engine(loop):
+#    engine = None
+#
+#    async def go():
+#        nonlocal engine
+#
+#        dsn = os.environ["DATABASE_URL"]
+#        engine = await sa.create_engine(dsn)
+#        return engine
+#
+#    yield go
+#
+#    if engine is not None:
+#        engine.close()
+#        loop.run_until_complete(engine.wait_closed())
+
+@pytest.fixture
+def loop():
+    loop = asyncio.get_event_loop()
     yield loop
-
-    if not loop._closed:
-        loop.call_soon(loop.stop)
-        loop.run_forever()
-        loop.close()
-    gc.collect()
-    asyncio.set_event_loop(None)
-
-@pytest.fixture
-def get_engine(loop):
-    engine = None
-
-    async def go():
-        nonlocal engine
-
-        dsn = os.environ["DATABASE_URL"]
-        engine = await sa.create_engine(dsn)
-        return engine
-
-    yield go
-
-    if engine is not None:
-        engine.close()
-        loop.run_until_complete(engine.wait_closed())
+    loop.close()
