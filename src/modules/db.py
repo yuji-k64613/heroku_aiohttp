@@ -12,7 +12,7 @@ tbl = sa.Table(
 )
 
 
-async def get_user(conn, user, password):
+async def get_user(conn, user):
     query = (
         sa.select([tbl.c.id, tbl.c.name, tbl.c.password])
         .select_from(tbl)

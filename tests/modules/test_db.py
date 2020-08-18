@@ -2,8 +2,8 @@ import pytest
 import asyncio
 import modules.db as db
 
-#@pytest.mark.asyncio
-#async def test_get_user(get_engine):
+# @pytest.mark.asyncio
+# async def test_get_user(get_engine):
 #    user = "foo"
 #    password = "bar"
 #
