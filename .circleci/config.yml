@@ -32,7 +32,7 @@ jobs:
       - slack/notify:
           color: "#42e2f4"
           mentions: "circleci,"
-          message: A custom message to notify the channel about the latest build
+          message: "CircleCIにてビルド"
       - slack/status:
           fail_only: true
           mentions: "circleci"
