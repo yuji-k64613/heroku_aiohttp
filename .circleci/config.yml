@@ -17,8 +17,6 @@ jobs:
           command: |
             python3 -m venv venv
             . venv/bin/activate
-            #pip install pytest
-            #pip install pytest-cov
             pip install -r requirements.txt
       - run:
           name: run test
@@ -30,6 +28,8 @@ jobs:
           command: |
             . venv/bin/activate
             pytest --cov=src
+      - store_test_results:
+          path: test-reports
       - heroku/deploy-via-git
       - slack/notify:
           color: "#42e2f4"
