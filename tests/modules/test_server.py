@@ -36,10 +36,36 @@ async def test_handle(aiohttp_client, loop, mocker):
     assert "Hello, world" in text
 
 
+class DummyConn(object): 
+    def __init__(self): 
+        pass
+      
+    #def __enter__(self): 
+    #    return None
+  
+    #def __exit__(self): 
+    #    pass
+
+    async def __aenter__(self): 
+        return None
+    
+    async def __aexit__(self, exc_type, exc, tb): 
+        pass
+
+
 @pytest.mark.asyncio
 async def test_main(aiohttp_client, loop, mocker):
-    user = { "user": "foo", "password": "bar" }
+    dummy = DummyConn()
+    mocker.patch('modules.server.acquire', return_value=dummy)
+
+    from collections import namedtuple
+    User = namedtuple('User', ['user', 'password'])
+    user = User(user="foo", password="bar")
     mocker.patch('modules.db.get_user', return_value=user)
+
+    text = "Hello, world right!"
+    res = web.Response(text=text)
+    mocker.patch('modules.server.fetch', return_value=(text, None, res))
 
     app = web.Application()
     app.router.add_get(r"/{path:.*}", server.handle)

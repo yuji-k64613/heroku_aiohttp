@@ -29,6 +29,12 @@ async def fetch(session, url):
         return text, binary, response
 
 
+def acquire():
+    global engine
+
+    return engine.acquire()
+
+
 async def main(request):
     # HTTPパラメータ
     query = request.query
@@ -58,7 +64,8 @@ async def main(request):
             param_password = request.query["password"]
 
         # DBアクセス(認証)
-        async with engine.acquire() as conn:
+        #async with engine.acquire() as conn:
+        async with acquire() as conn:
             user = await db.get_user(conn, param_user, param_password)
         if user is None:
             logging.error("ERROR2!!")
@@ -113,6 +120,7 @@ def setup_routes(app):
 
 async def init_pg(app):
     global environ
+    global engine
 
     dsn = os.environ["DATABASE_URL"]
     engine = await create_engine(dsn)
