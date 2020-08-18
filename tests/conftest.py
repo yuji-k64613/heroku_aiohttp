@@ -43,22 +43,22 @@ import gc
 #    gc.collect()
 #    asyncio.set_event_loop(None)
 
-# @pytest.fixture
-# def get_engine(loop):
-#    engine = None
-#
-#    async def go():
-#        nonlocal engine
-#
-#        dsn = os.environ["DATABASE_URL"]
-#        engine = await sa.create_engine(dsn)
-#        return engine
-#
-#    yield go
-#
-#    if engine is not None:
-#        engine.close()
-#        loop.run_until_complete(engine.wait_closed())
+@pytest.fixture
+def get_engine(loop):
+    engine = None
+
+    async def go():
+        nonlocal engine
+
+        dsn = os.environ["DATABASE_URL"]
+        engine = await sa.create_engine(dsn)
+        return engine
+
+    yield go
+
+    if engine is not None:
+        engine.close()
+        loop.run_until_complete(engine.wait_closed())
 
 
 @pytest.fixture
