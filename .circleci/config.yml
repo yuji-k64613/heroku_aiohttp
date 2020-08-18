@@ -30,6 +30,8 @@ jobs:
             pytest --cov=src
       - store_test_results:
           path: test-reports
+      - store_artifacts:
+          path: test-reports
       - heroku/deploy-via-git
       - slack/notify:
           color: "#42e2f4"
