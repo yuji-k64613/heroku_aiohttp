@@ -130,3 +130,6 @@ dmypy.json
 
 # vi
 *.swp
+
+# pytest
+test-reports/
