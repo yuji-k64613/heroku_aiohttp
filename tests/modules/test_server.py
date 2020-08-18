@@ -18,11 +18,28 @@ async def test_setup_routes(aiohttp_client, loop, mocker):
     text = await resp.text()
     assert "Hello, world" in text
 
+
 @pytest.mark.asyncio
 async def test_handle(aiohttp_client, loop, mocker):
     text = "Hello, world right!"
     res = web.Response(text=text)
     mocker.patch('modules.server.main', return_value=(text, None, None, res))
+
+    app = web.Application()
+    app.router.add_get(r"/{path:.*}", server.handle)
+
+    client = await aiohttp_client(app)
+
+    resp = await client.get("/?user=foo&password=bar")
+    assert resp.status == 200
+    text = await resp.text()
+    assert "Hello, world" in text
+
+
+@pytest.mark.asyncio
+async def test_main(aiohttp_client, loop, mocker):
+    user = { "user": "foo", "password": "bar" }
+    mocker.patch('modules.db.get_user', return_value=user)
 
     app = web.Application()
     app.router.add_get(r"/{path:.*}", server.handle)

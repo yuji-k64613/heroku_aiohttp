@@ -38,6 +38,9 @@ jobs:
           mentions: "circleci"
 
 workflows:
+  build-and-notify:
+    jobs:
+      - build
   heroku_deploy:
     jobs:
       - heroku/deploy-via-git

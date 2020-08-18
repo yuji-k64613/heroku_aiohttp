@@ -60,7 +60,7 @@ async def main(request):
         # DBアクセス(認証)
         async with engine.acquire() as conn:
             user = await db.get_user(conn, param_user, param_password)
-        if not user:
+        if user is None:
             logging.error("ERROR2!!")
             raise web.HTTPUnauthorized()
         elif user.password != param_password:
