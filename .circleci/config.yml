@@ -42,6 +42,7 @@ workflows:
   build-and-notify:
     jobs:
       - build-and-test
-  heroku_deploy:
-    jobs:
       - heroku/deploy-via-git
+  #heroku_deploy:
+  #  jobs:
+  #    - heroku/deploy-via-git
