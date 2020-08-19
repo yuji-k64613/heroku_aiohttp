@@ -2,6 +2,7 @@ import pytest
 import asyncio
 import modules.db as db
 
+
 @pytest.mark.asyncio
 async def test_get_user(get_engine):
     user = "foo"
@@ -11,3 +12,5 @@ async def test_get_user(get_engine):
         user = await db.get_user(conn, user)
 
     assert user is not None
+    assert user.name == "foo"
+    assert user.password == "bar"

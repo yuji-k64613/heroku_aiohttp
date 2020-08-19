@@ -12,6 +12,11 @@ tbl = sa.Table(
 )
 
 
+def get_tbl():
+    global tbl
+    return tbl
+
+
 async def get_user(conn, user):
     query = (
         sa.select([tbl.c.id, tbl.c.name, tbl.c.password])
