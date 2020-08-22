@@ -1,0 +1,6 @@
+---
+applications:
+- name: herokuk-aiohttp
+  instances: 1
+  memory: 64M
+  command: python src/main.py
