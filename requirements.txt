@@ -58,7 +58,7 @@ tornado==6.0.4
 tox==3.19.0
 typed-ast==1.4.1
 ujson==3.0.0
-urllib3==1.25.9
+urllib3==1.26.5
 uvloop==0.14.0
 virtualenv==20.0.30
 wcwidth==0.2.4
